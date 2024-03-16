@@ -1,26 +1,38 @@
-import pygame,sys
+import pygame,sys,random
 from pygame.math import Vector2
+
+class Snake:
+    def __init__(self):
+        self.body = [Vector2(5,10),Vector2(6,10),Vector2(7,10)]
+
+    def draw_snake(self):
+        for block in self.body:
+            x_pos = int(block.x * cell_size)
+            y_pos = int(block.y * cell_size)
+            snake_rect = pygame.Rect(x_pos, y_pos, cell_size, cell_size)
+            pygame.draw.rect(screen,(183,191,122), snake_rect)
 
 class Fruit:
     # The position of the fruit
     def __init__(self):
-        self.x = 4
-        self.y = 5
+        self.x = random.randint(0, cell_number - 1)
+        self.y = random.randint(0, cell_number - 1)
         self.position = Vector2(self.x, self.y)
 
     # Draw the fruit
     def draw_fruit(self):
-        fruit_rect = pygame.Rect(self.position.x, self.position.y, cell_size, cell_size)
+        fruit_rect = pygame.Rect(self.position.x * cell_size, self.position.y * cell_size, cell_size, cell_size)
         pygame.draw.rect(screen,(126,166,114),fruit_rect)
-
+            
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
-clock = pygame.time.Clock()
-dt = 0
 cell_size = 40
-player_pos = pygame.rect.Rect(100, 100, 40, 40)
+cell_number = 20
+dt = 0
+screen = pygame.display.set_mode((cell_number * cell_size, cell_number * cell_size))
+clock = pygame.time.Clock()
 
 fruit = Fruit()
+snake = Snake()
 
 while True:
     for event in pygame.event.get():
@@ -29,19 +41,7 @@ while True:
             sys.exit()
 
     screen.fill('gray')
-
-    pygame.draw.rect(screen, "blue", player_pos, 40)
-
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
-    if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
-    if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
-
+    snake.draw_snake()
     fruit.draw_fruit()
     pygame.display.update()
     dt = clock.tick(60) / 1000
